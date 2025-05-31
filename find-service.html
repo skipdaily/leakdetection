@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" />
+
+  <title>Find Your Service - Leak Detection</title>
+  <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+
+<body>
+  <div class="relative flex size-full min-h-screen flex-col bg-[#f9f9fb] group/design-root overflow-x-hidden"
+    style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+      <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e9eaf2] px-10 py-3">
+        <div class="flex items-center gap-4 text-[#0f111a]">
+          <a href="index.html" class="flex items-center gap-4">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                  fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 class="text-[#0f111a] text-lg font-bold leading-tight tracking-[-0.015em]">Leak Detection</h2>
+          </a>
+        </div>
+        <div class="flex flex-1 justify-end gap-8">
+          <div class="flex items-center gap-9">
+            <a class="text-[#0f111a] text-sm font-medium leading-normal border-b-2 border-[#0f111a]"
+              href="find-service.html">Find Your Service</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="how-it-works.html">How It Works</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="resources.html">Resources</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="emergency.html">Emergency?</a>
+          </div>
+          <a href="emergency.html"
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+            <span class="truncate">📞 24/7 Emergency Help</span>
+          </a>
+        </div>
+      </header>
+
+      <div class="px-10 md:px-40 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+          <div class="pb-6">
+            <h1 class="text-[#0f111a] text-3xl font-bold leading-tight tracking-[-0.015em] mb-4">Find Your Service</h1>
+            <p class="text-[#56618f] text-base mb-6">Select your property type and location to find the best leak
+              detection services for your needs.</p>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <h2 class="text-[#0f111a] text-xl font-bold mb-4">Service Finder</h2>
+              <form class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-[#0f111a] text-sm font-medium mb-2" for="property-type">Property
+                      Type</label>
+                    <select id="property-type"
+                      class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                      <option value="">Select Property Type</option>
+                      <option value="residential">Residential</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="industrial">Industrial</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[#0f111a] text-sm font-medium mb-2" for="service-type">Service Type</label>
+                    <select id="service-type"
+                      class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                      <option value="">Select Service Type</option>
+                      <option value="water">Water Leak Detection</option>
+                      <option value="gas">Gas Leak Detection</option>
+                      <option value="co">Carbon Monoxide Detection</option>
+                      <option value="all">All Services</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[#0f111a] text-sm font-medium mb-2" for="zip-code">Zip Code</label>
+                  <input type="text" id="zip-code" placeholder="Enter your zip code"
+                    class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                </div>
+
+                <button type="button"
+                  class="w-full flex justify-center items-center rounded-full h-12 px-5 bg-[#e9ecfa] text-[#0f111a] text-base font-bold leading-normal tracking-[0.015em]">
+                  Find Services
+                </button>
+              </form>
+            </div>
+
+            <h2 class="text-[#0f111a] text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Our Services</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div class="flex flex-1 gap-3 rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-6 flex-col">
+                <div class="text-[#0f111a]" data-icon="Drop" data-size="32px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM128,216a72.08,72.08,0,0,1-72-72c0-57.23,55.47-105,72-118,16.53,13,72,60.75,72,118A72.08,72.08,0,0,1,128,216Zm55.89-62.66a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <h2 class="text-[#0f111a] text-xl font-bold leading-tight">Water Leak Detection</h2>
+                  <p class="text-[#56618f] text-base font-normal leading-normal">Our comprehensive water leak detection
+                    service uses advanced acoustic technology to identify hidden leaks without damaging your property.
+                  </p>
+                  <ul class="text-[#56618f] text-sm space-y-2 mt-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Non-invasive detection techniques
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Pinpoint accuracy
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Prevent water damage and mold
+                    </li>
+                  </ul>
+                  <a href="schedule.html"
+                    class="mt-4 flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+                    <span class="truncate">Schedule Service</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex flex-1 gap-3 rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-6 flex-col">
+                <div class="text-[#0f111a]" data-icon="Flame" data-size="32px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M173.79,51.48a221.25,221.25,0,0,0-41.67-34.34,8,8,0,0,0-8.24,0A221.25,221.25,0,0,0,82.21,51.48C54.59,80.48,40,112.47,40,144a88,88,0,0,0,176,0C216,112.47,201.41,80.48,173.79,51.48ZM96,184c0-27.67,22.53-47.28,32-54.3,9.48,7,32,26.63,32,54.3a32,32,0,0,1-64,0Zm77.27,15.93A47.8,47.8,0,0,0,176,184c0-44-42.09-69.79-43.88-70.86a8,8,0,0,0-8.24,0C122.09,114.21,80,140,80,184a47.8,47.8,0,0,0,2.73,15.93A71.88,71.88,0,0,1,56,144c0-34.41,20.4-63.15,37.52-81.19A216.21,216.21,0,0,1,128,33.54a215.77,215.77,0,0,1,34.48,29.27C193.49,95.5,200,125,200,144A71.88,71.88,0,0,1,173.27,199.93Z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <h2 class="text-[#0f111a] text-xl font-bold leading-tight">Gas Leak Monitoring</h2>
+                  <p class="text-[#56618f] text-base font-normal leading-normal">Our gas leak detection service
+                    identifies dangerous gas leaks quickly and accurately to keep your home and family safe.</p>
+                  <ul class="text-[#56618f] text-sm space-y-2 mt-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      High-sensitivity gas detection
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Immediate threat assessment
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Prevent explosions and health hazards
+                    </li>
+                  </ul>
+                  <a href="schedule.html"
+                    class="mt-4 flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+                    <span class="truncate">Schedule Service</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex flex-1 gap-3 rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-6 flex-col">
+                <div class="text-[#0f111a]" data-icon="Skull" data-size="32px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M92,104a28,28,0,1,0,28,28A28,28,0,0,0,92,104Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,92,144Zm72-40a28,28,0,1,0,28,28A28,28,0,0,0,164,104Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,164,144ZM128,16C70.65,16,24,60.86,24,116c0,34.1,18.27,66,48,84.28V216a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V200.28C213.73,182,232,150.1,232,116,232,60.86,185.35,16,128,16Zm44.12,172.69a8,8,0,0,0-4.12,7V216H152V192a8,8,0,0,0-16,0v24H120V192a8,8,0,0,0-16,0v24H88V195.69a8,8,0,0,0-4.12-7C56.81,173.69,40,145.84,40,116c0-46.32,39.48-84,88-84s88,37.68,88,84C216,145.83,199.19,173.69,172.12,188.69Z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <h2 class="text-[#0f111a] text-xl font-bold leading-tight">Carbon Monoxide Alerts</h2>
+                  <p class="text-[#56618f] text-base font-normal leading-normal">Our carbon monoxide detection service
+                    helps protect against this invisible, odorless, and potentially lethal gas.</p>
+                  <ul class="text-[#56618f] text-sm space-y-2 mt-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Early warning system
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Source identification
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Life-saving prevention
+                    </li>
+                  </ul>
+                  <a href="schedule.html"
+                    class="mt-4 flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+                    <span class="truncate">Schedule Service</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <h2 class="text-[#0f111a] text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Our Pricing</h2>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <h3 class="text-[#0f111a] text-xl font-bold mb-4">Transparent Pricing Structure</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-[#e9eaf2]">
+                  <thead>
+                    <tr>
+                      <th
+                        class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                        Service Type</th>
+                      <th
+                        class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                        Base Fee</th>
+                      <th
+                        class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                        Service Fee</th>
+                      <th
+                        class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                        Starting Total</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-[#e9eaf2]">
+                    <tr>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-medium">Water Leak Detection
+                      </td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$150</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$50</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-bold">$200</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-medium">Gas Leak Detection</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$150</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$75</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-bold">$225</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-medium">Carbon Monoxide
+                        Detection</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$150</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$40</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-bold">$190</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-medium">Comprehensive (All
+                        Services)</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$150</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">$125</td>
+                      <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-bold">$275</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">Additional Factors</h4>
+                  <ul class="text-[#56618f] text-sm space-y-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Plus" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Property Size Fee: $0-$100 based on square footage
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Plus" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Weekend Service: Additional $50
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Plus" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Emergency Service: Additional $100
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">What's Included</h4>
+                  <ul class="text-[#56618f] text-sm space-y-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Full inspection using professional equipment
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Detailed written report with findings
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Recommendations for repairs if needed
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <h2 class="text-[#0f111a] text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Service Areas</h2>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <h3 class="text-[#0f111a] text-xl font-bold mb-4">We Serve These Areas</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">North Region</h4>
+                  <ul class="text-[#56618f] text-sm space-y-1">
+                    <li>Northville</li>
+                    <li>Westlake</li>
+                    <li>Highpoint</li>
+                    <li>Riverdale</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">South Region</h4>
+                  <ul class="text-[#56618f] text-sm space-y-1">
+                    <li>Southview</li>
+                    <li>Harbor City</li>
+                    <li>Palms Beach</li>
+                    <li>Sandyshore</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">East Region</h4>
+                  <ul class="text-[#56618f] text-sm space-y-1">
+                    <li>Eastwood</li>
+                    <li>Lakefront</li>
+                    <li>Pinecrest</li>
+                    <li>Meadowvale</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="text-[#0f111a] font-bold mb-2">West Region</h4>
+                  <ul class="text-[#56618f] text-sm space-y-1">
+                    <li>Westfield</li>
+                    <li>Sunset Hills</li>
+                    <li>Ocean View</li>
+                    <li>Bayfront</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="text-[#56618f] text-sm mt-4">Don't see your area? Contact us to check if we service your
+                location.</p>
+            </div>
+
+            <div class="flex justify-center mt-6">
+              <a href="schedule.html"
+                class="flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-[#e9ecfa] text-[#0f111a] text-base font-bold leading-normal tracking-[0.015em]">
+                <span class="truncate">Schedule Your Inspection</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-10 border-t border-solid border-t-[#e9eaf2] py-8 px-10">
+        <div class="flex flex-col md:flex-row justify-between gap-8">
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <div class="size-4">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <h2 class="text-[#0f111a] text-lg font-bold leading-tight tracking-[-0.015em]">Leak Detection</h2>
+            </div>
+            <p class="text-[#56618f] text-sm">Professional leak detection services for your home and business.</p>
+            <p class="text-[#56618f] text-sm">© 2025 Leak Detection. All rights reserved.</p>
+          </div>
+          <div class="flex gap-12">
+            <div class="flex flex-col gap-3">
+              <h3 class="text-[#0f111a] font-bold mb-2">Services</h3>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Water Leak Detection</a>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Gas Leak Monitoring</a>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Carbon Monoxide Alerts</a>
+            </div>
+            <div class="flex flex-col gap-3">
+              <h3 class="text-[#0f111a] font-bold mb-2">Company</h3>
+              <a href="how-it-works.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">How It Works</a>
+              <a href="resources.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Resources</a>
+              <a href="emergency.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Emergency</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

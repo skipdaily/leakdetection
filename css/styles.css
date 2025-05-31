@@ -1,0 +1,157 @@
+/* Global Styles */
+body {
+    font-family: "Public Sans", "Noto Sans", sans-serif;
+    color: #0f111a;
+    background-color: #f9f9fb;
+}
+
+.text-primary {
+    color: #0f111a;
+}
+
+.text-secondary {
+    color: #56618f;
+}
+
+.bg-primary {
+    background-color: #e9ecfa;
+}
+
+.border-color {
+    border-color: #e9eaf2;
+}
+
+/* Header Styles */
+header {
+    border-bottom: 1px solid #e9eaf2;
+}
+
+header a.active {
+    border-bottom: 2px solid #0f111a;
+}
+
+/* Hero Section */
+.hero-section {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* Card Styles */
+.service-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #0f111a;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2a2f45;
+}
+
+.btn-secondary {
+    background-color: #e9ecfa;
+    color: #0f111a;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #d8ddfa;
+}
+
+/* Form Styles */
+.form-input:focus {
+    border-color: #0f111a;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(15, 17, 26, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .header-nav {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: block;
+    }
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Emergency Styles */
+.emergency-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+    }
+}
+
+/* FAQ Styles */
+.faq-item {
+    border-bottom: 1px solid #e9eaf2;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+}
+
+/* Custom Icons */
+.icon-water {
+    color: #4299e1;
+}
+
+.icon-gas {
+    color: #ed8936;
+}
+
+.icon-carbon {
+    color: #718096;
+}
+
+/* Custom utility classes */
+.shadow-hover:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}

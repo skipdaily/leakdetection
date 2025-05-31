@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" />
+
+  <title>Schedule Inspection - Leak Detection</title>
+  <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+
+<body>
+  <div class="relative flex size-full min-h-screen flex-col bg-[#f9f9fb] group/design-root overflow-x-hidden"
+    style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+      <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e9eaf2] px-10 py-3">
+        <div class="flex items-center gap-4 text-[#0f111a]">
+          <a href="index.html" class="flex items-center gap-4">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                  fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 class="text-[#0f111a] text-lg font-bold leading-tight tracking-[-0.015em]">Leak Detection</h2>
+          </a>
+        </div>
+        <div class="flex flex-1 justify-end gap-8">
+          <div class="flex items-center gap-9">
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="find-service.html">Find Your Service</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="how-it-works.html">How It Works</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="resources.html">Resources</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="emergency.html">Emergency?</a>
+          </div>
+          <a href="emergency.html"
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+            <span class="truncate">📞 24/7 Emergency Help</span>
+          </a>
+        </div>
+      </header>
+
+      <div class="px-10 md:px-40 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+          <div class="pb-6">
+            <h1 class="text-[#0f111a] text-3xl font-bold leading-tight tracking-[-0.015em] mb-4">Schedule Your
+              Inspection</h1>
+            <p class="text-[#56618f] text-base mb-6">Book your professional leak detection service in just a few simple
+              steps.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div>
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                  <h2 class="text-[#0f111a] text-xl font-bold mb-4">Appointment Details</h2>
+                  <form class="space-y-4 schedule-form">
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2">Service Type</label>
+                      <div class="space-y-3 bg-[#f9f9fb] rounded-lg border border-[#d2d6e4] p-4">
+                        <div class="flex items-center">
+                          <input type="checkbox" id="service-water" value="water"
+                            class="service-type-checkbox rounded border-[#d2d6e4] text-[#0f111a] mr-2">
+                          <label for="service-water" class="text-[#0f111a]">Water Leak Detection</label>
+                        </div>
+                        <div class="flex items-center">
+                          <input type="checkbox" id="service-gas" value="gas"
+                            class="service-type-checkbox rounded border-[#d2d6e4] text-[#0f111a] mr-2">
+                          <label for="service-gas" class="text-[#0f111a]">Gas Leak Detection</label>
+                        </div>
+                        <div class="flex items-center">
+                          <input type="checkbox" id="service-co" value="co"
+                            class="service-type-checkbox rounded border-[#d2d6e4] text-[#0f111a] mr-2">
+                          <label for="service-co" class="text-[#0f111a]">Carbon Monoxide Detection</label>
+                        </div>
+                        <div class="pt-2 border-t border-[#e9eaf2]">
+                          <div class="flex items-center">
+                            <input type="checkbox" id="service-all" value="all"
+                              class="rounded border-[#d2d6e4] text-[#0f111a] mr-2">
+                            <label for="service-all" class="text-[#0f111a] font-medium">Comprehensive Package (All
+                              Services)</label>
+                          </div>
+                          <p class="text-[#56618f] text-xs mt-1 ml-6">Save 15% compared to selecting individual services
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="property-type">Property
+                        Type</label>
+                      <select id="property-type"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                        <option value="">Select Property Type</option>
+                        <option value="apartment">Apartment/Condo</option>
+                        <option value="house">Single Family Home</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="commercial">Commercial Property</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="property-size">Property
+                        Size</label>
+                      <select id="property-size"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                        <option value="">Select Property Size</option>
+                        <option value="1bed">Up to 1,000 sq ft</option>
+                        <option value="2bed">1,000-2,000 sq ft</option>
+                        <option value="3bed">2,000-3,500 sq ft</option>
+                        <option value="large">3,500+ sq ft</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="preferred-date">Preferred
+                        Date</label>
+                      <input type="date" id="preferred-date"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="preferred-time">Preferred
+                        Time</label>
+                      <select id="preferred-time"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                        <option value="">Select Preferred Time</option>
+                        <option value="morning">Morning (8am - 12pm)</option>
+                        <option value="afternoon">Afternoon (12pm - 4pm)</option>
+                        <option value="evening">Evening (4pm - 7pm)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="special-notes">Special Notes
+                        (Optional)</label>
+                      <textarea id="special-notes" rows="3"
+                        placeholder="Any specific concerns or instructions for our technicians?"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]"></textarea>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="bg-[#e9eaf2] rounded-xl p-4">
+                  <div class="flex items-center gap-3 mb-2">
+                    <div class="text-[#0f111a]" data-icon="Info" data-size="20px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+                        viewBox="0 0 256 256">
+                        <path
+                          d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z">
+                        </path>
+                      </svg>
+                    </div>
+                    <h3 class="text-[#0f111a] font-bold">Need a specific time?</h3>
+                  </div>
+                  <p class="text-[#0f111a] text-sm">If you need a specific appointment time outside of our standard
+                    windows, please call us at (555) 123-4567 to schedule.</p>
+                </div>
+              </div>
+
+              <div>
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                  <h2 class="text-[#0f111a] text-xl font-bold mb-4">Contact Information</h2>
+                  <form class="space-y-4 contact-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label class="block text-[#0f111a] text-sm font-medium mb-2" for="first-name">First Name</label>
+                        <input type="text" id="first-name" placeholder="First Name"
+                          class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                      </div>
+                      <div>
+                        <label class="block text-[#0f111a] text-sm font-medium mb-2" for="last-name">Last Name</label>
+                        <input type="text" id="last-name" placeholder="Last Name"
+                          class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="email">Email Address</label>
+                      <input type="email" id="email" placeholder="email@example.com"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="phone">Phone Number</label>
+                      <input type="tel" id="phone" placeholder="(555) 123-4567"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="address">Property
+                        Address</label>
+                      <input type="text" id="address" placeholder="Street Address"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a] mb-2">
+                      <div class="grid grid-cols-2 gap-2">
+                        <input type="text" placeholder="City"
+                          class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                        <input type="text" placeholder="Zip Code"
+                          class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-[#0f111a] text-sm font-medium mb-2" for="how-hear">How did you hear about
+                        us?</label>
+                      <select id="how-hear"
+                        class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+                        <option value="">Select an option</option>
+                        <option value="search">Search Engine</option>
+                        <option value="social">Social Media</option>
+                        <option value="friend">Friend/Family Referral</option>
+                        <option value="ad">Advertisement</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+
+                    <div class="flex items-start mt-2">
+                      <input type="checkbox" id="terms" class="mt-1 rounded border-[#d2d6e4] text-[#0f111a]">
+                      <label for="terms" class="ml-2 text-[#56618f] text-sm">I agree to the <a href="#"
+                          class="text-[#0f111a] underline">Terms of Service</a> and <a href="#"
+                          class="text-[#0f111a] underline">Privacy Policy</a></label>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6 price-estimate-section">
+                  <h2 class="text-[#0f111a] text-xl font-bold mb-4">Price Estimate</h2>
+                  <div class="space-y-3 mb-4">
+                    <div class="flex justify-between">
+                      <span class="text-[#56618f]">Base Inspection Fee</span>
+                      <span id="base-inspection-fee" class="text-[#0f111a] font-medium">$150.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span id="service-type-label" class="text-[#56618f]">Service Fee</span>
+                      <span id="service-type-fee" class="text-[#0f111a] font-medium">$0.00</span>
+                    </div>
+                    <div id="property-size-fee-row" class="flex justify-between">
+                      <span class="text-[#56618f]">Property Size Fee</span>
+                      <span id="property-size-fee" class="text-[#0f111a] font-medium">$0.00</span>
+                    </div>
+                    <div id="weekend-fee-row" class="flex justify-between" style="display: none;">
+                      <span class="text-[#56618f]">Weekend Service Fee</span>
+                      <span id="weekend-fee" class="text-[#0f111a] font-medium">$50.00</span>
+                    </div>
+                    <div class="border-t border-[#e9eaf2] pt-2 flex justify-between">
+                      <span class="text-[#0f111a] font-bold">Estimated Total</span>
+                      <span id="total-price" class="text-[#0f111a] font-bold">$150.00</span>
+                    </div>
+                  </div>
+                  <p class="text-[#56618f] text-xs mb-4">*Final price may vary based on inspection findings and property
+                    specifics.</p>
+                  <button type="submit"
+                    class="w-full flex justify-center items-center rounded-full h-12 px-5 bg-[#e9ecfa] text-[#0f111a] text-base font-bold leading-normal tracking-[0.015em]">
+                    Schedule Inspection
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-[#e9eaf2] rounded-xl p-6 mb-8">
+              <h2 class="text-[#0f111a] text-xl font-bold mb-3">What to Expect</h2>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <div
+                      class="flex items-center justify-center w-8 h-8 rounded-full bg-[#0f111a] text-white text-sm font-bold">
+                      1</div>
+                    <h3 class="text-[#0f111a] font-bold">Confirmation</h3>
+                  </div>
+                  <p class="text-[#56618f] text-sm">You'll receive an email and text confirmation within minutes of
+                    booking your appointment.</p>
+                </div>
+                <div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <div
+                      class="flex items-center justify-center w-8 h-8 rounded-full bg-[#0f111a] text-white text-sm font-bold">
+                      2</div>
+                    <h3 class="text-[#0f111a] font-bold">Reminder</h3>
+                  </div>
+                  <p class="text-[#56618f] text-sm">We'll send you a reminder 24 hours before your scheduled
+                    appointment.</p>
+                </div>
+                <div>
+                  <div class="flex items-center gap-3 mb-2">
+                    <div
+                      class="flex items-center justify-center w-8 h-8 rounded-full bg-[#0f111a] text-white text-sm font-bold">
+                      3</div>
+                    <h3 class="text-[#0f111a] font-bold">Service</h3>
+                  </div>
+                  <p class="text-[#56618f] text-sm">Our technician will arrive within your scheduled time window and
+                    conduct a thorough inspection.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2 class="text-[#0f111a] text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Our Satisfaction
+              Guarantee</h2>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <div class="flex flex-col md:flex-row gap-6 items-center">
+                <div class="text-[#0f111a]" data-icon="Shield" data-size="64px" data-weight="regular">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64px" height="64px" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                      d="M208,40H48A16,16,0,0,0,32,56v58.77c0,89.62,75.82,119.34,91,124.39a15.41,15.41,0,0,0,10,0c15.2-5.05,91-34.77,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,39.25-13.87,66.09-26.24,82.55-11.8,15.72-23.41,24.43-29.56,28.66h0L152,226l-.16-.11c-6.14-4.21-17.76-12.93-29.56-28.65C109.86,180.86,96,154,96,114.77V56H208ZM48,56H80v58.8c0,8.17.47,15.79,1.38,22.94C57.9,110.8,48,87.15,48,56Z">
+                    </path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-[#0f111a] text-lg font-bold mb-2">100% Satisfaction Guarantee</h3>
+                  <p class="text-[#56618f] mb-4">If you're not completely satisfied with our service, we'll come back
+                    and make it right at no additional cost. Our goal is to ensure your complete satisfaction and peace
+                    of mind.</p>
+                  <ul class="text-[#56618f] text-sm space-y-2">
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Professional, certified technicians
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Advanced detection technology
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      Detailed inspection reports
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <div class="text-[#0f111a] mt-0.5" data-icon="Check" data-size="16px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="currentColor"
+                          viewBox="0 0 256 256">
+                          <path
+                            d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z">
+                          </path>
+                        </svg>
+                      </div>
+                      No-hassle rescheduling
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-[#e9eaf2] rounded-xl p-6">
+              <h2 class="text-[#0f111a] text-xl font-bold mb-3">Need Immediate Assistance?</h2>
+              <p class="text-[#56618f] mb-4">If you have an emergency situation, please don't wait for an online
+                appointment.</p>
+              <a href="emergency.html"
+                class="flex justify-center items-center w-full md:w-auto rounded-full h-12 px-6 bg-[#0f111a] text-white text-base font-bold leading-normal tracking-[0.015em]">
+                <span class="truncate">Contact Emergency Services</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-10 border-t border-solid border-t-[#e9eaf2] py-8 px-10">
+        <div class="flex flex-col md:flex-row justify-between gap-8">
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-2">
+              <div class="size-4">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                    fill="currentColor"></path>
+                </svg>
+              </div>
+              <h2 class="text-[#0f111a] text-lg font-bold leading-tight tracking-[-0.015em]">Leak Detection</h2>
+            </div>
+            <p class="text-[#56618f] text-sm">Professional leak detection services for your home and business.</p>
+            <p class="text-[#56618f] text-sm">© 2025 Leak Detection. All rights reserved.</p>
+          </div>
+          <div class="flex gap-12">
+            <div class="flex flex-col gap-3">
+              <h3 class="text-[#0f111a] font-bold mb-2">Services</h3>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Water Leak Detection</a>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Gas Leak Monitoring</a>
+              <a href="find-service.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Carbon Monoxide Alerts</a>
+            </div>
+            <div class="flex flex-col gap-3">
+              <h3 class="text-[#0f111a] font-bold mb-2">Company</h3>
+              <a href="how-it-works.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">How It Works</a>
+              <a href="resources.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Resources</a>
+              <a href="emergency.html" class="text-[#56618f] text-sm hover:text-[#0f111a]">Emergency</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

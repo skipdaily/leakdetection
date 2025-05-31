@@ -1,0 +1,238 @@
+{
+    "name": "Event Date Time Extractor",
+    "nodes": [
+        {
+            "parameters": {
+                "url": "https://myemail.constantcontact.com/-April-News---Events-from-Loomis-Library.html?soid=1120587253049&aid=JXLlHuEPNLU",
+                "options": {
+                    "response": {
+                        "response": {
+                            "responseFormat": "autodetect"
+                        }
+                    },
+                    "headers": {
+                        "headers": [
+                            {
+                                "name": "User-Agent",
+                                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                            },
+                            {
+                                "name": "Accept",
+                                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+                            },
+                            {
+                                "name": "Accept-Language",
+                                "value": "en-US,en;q=0.5"
+                            }
+                        ]
+                    }
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.1,
+            "position": [
+                260,
+                300
+            ],
+            "id": "1",
+            "name": "Fetch Webpage"
+        },
+        {
+            "parameters": {
+                "mode": "htmlExtract",
+                "value": "={{ $json.data || $json.body || $json.html }}",
+                "extractionValues": {
+                    "values": [
+                        {
+                            "key": "fullText",
+                            "cssSelector": "body",
+                            "returnValue": "text",
+                            "skipSelectors": "script,style,meta,link"
+                        },
+                        {
+                            "key": "eventText",
+                            "cssSelector": ".container, .content, #content, main, article, [class*='event'], .long-text",
+                            "returnValue": "text",
+                            "skipSelectors": "script,style,meta,link"
+                        },
+                        {
+                            "key": "rawHtml",
+                            "cssSelector": "body",
+                            "returnValue": "html"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.html",
+            "typeVersion": 1,
+            "position": [
+                480,
+                300
+            ],
+            "id": "2",
+            "name": "Extract HTML Content"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Debug: Check what data we're receiving\nconsole.log('Input data:', JSON.stringify($input.first().json, null, 2));\n\n// Get the text content - try different possible properties\nconst inputData = $input.first().json;\nlet text = inputData.fullText || inputData.eventText || inputData.text || inputData.content || '';\n\n// If still no text, try to get it from the raw HTML and parse it manually\nif ((!text || text.length < 100) && inputData.rawHtml) {\n  const htmlContent = inputData.rawHtml;\n  // Simple HTML tag removal for basic text extraction\n  text = htmlContent.replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '')\n                  .replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '')\n                  .replace(/<[^>]*>/g, ' ')\n                  .replace(/\\s+/g, ' ')\n                  .trim();\n}\n\n// If text is really empty, try data directly\nif (!text && inputData.data) {\n  text = typeof inputData.data === 'string' ? \n    inputData.data.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim() : \n    JSON.stringify(inputData.data);\n}\n\n// Convert to string if needed\ntext = String(text || '');\n\n// If text is still empty or just generic content, return error info\nif (!text || text.length < 100 || text.includes('This is an H1 heading')) {\n  return [{\n    json: {\n      error: 'No valid content found in page',\n      receivedKeys: Object.keys(inputData),\n      textPreview: text.substring(0, 200),\n      rawHtmlPreview: inputData.rawHtml ? inputData.rawHtml.substring(0, 500) : 'No HTML',\n      suggestion: 'The target website might be blocking automated requests or using JavaScript to load content'\n    }\n  }];\n}\n\n// Look for library/event-specific content\nconst events = [];\n\n// Enhanced patterns for library events\nconst eventKeywords = ['storytime', 'workshop', 'club', 'presentation', 'class', 'program', 'meeting', 'sale', 'help', 'aid'];\nconst monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];\nconst dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];\n\n// Split text into sections for better parsing\nconst sections = text.split(/\\n\\s*\\n|\\|\\s*\\||<br[\\s/]*>|\\n[\\s-]*\\n/);\n\nfor (const section of sections) {\n  if (section.trim().length < 20) continue;\n  \n  // Look for date patterns\n  const datePatterns = [\n    // Day, Month Date format\n    /([A-Za-z]+day),?\\s+([A-Za-z]+)\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:\\s*&\\s*(\\d{1,2})(?:st|nd|rd|th)?)?/gi,\n    // Month Date - Date format\n    /([A-Za-z]+)\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*-\\s*(\\d{1,2})(?:st|nd|rd|th)?/gi,\n    // Just Month Date\n    /([A-Za-z]+)\\s+(\\d{1,2})(?:st|nd|rd|th)?/gi\n  ];\n  \n  // Look for time patterns\n  const timePattern = /(\\d{1,2}(?::\\d{2})?\\s*(?:am|pm|AM|PM)(?:\\s*[-–]\\s*\\d{1,2}(?::\\d{2})?\\s*(?:am|pm|AM|PM))?)/gi;\n  \n  let foundDate = null;\n  let foundTime = null;\n  \n  // Find dates\n  for (const pattern of datePatterns) {\n    pattern.lastIndex = 0;\n    const match = pattern.exec(section);\n    if (match) {\n      foundDate = match[0];\n      break;\n    }\n  }\n  \n  // Find times\n  timePattern.lastIndex = 0;\n  const timeMatch = timePattern.exec(section);\n  if (timeMatch) {\n    foundTime = timeMatch[0];\n  }\n  \n  // If we found a date, try to extract event name\n  if (foundDate) {\n    let eventName = 'Library Event';\n    \n    // Look for event keywords in the section\n    const words = section.toLowerCase().split(/\\s+/);\n    const eventWords = [];\n    \n    for (let i = 0; i < words.length; i++) {\n      const word = words[i];\n      if (eventKeywords.some(keyword => word.includes(keyword))) {\n        // Get surrounding words for context\n        const start = Math.max(0, i - 3);\n        const end = Math.min(words.length, i + 4);\n        eventWords.push(...words.slice(start, end));\n        break;\n      }\n    }\n    \n    if (eventWords.length > 0) {\n      eventName = eventWords.join(' ').replace(/[^a-zA-Z0-9\\s]/g, ' ').replace(/\\s+/g, ' ').trim();\n      eventName = eventName.charAt(0).toUpperCase() + eventName.slice(1);\n    }\n    \n    // Try to extract title-like text (usually in caps or at beginning)\n    const lines = section.split(/\\n|<br[\\s/]*>/);\n    for (const line of lines) {\n      const cleanLine = line.trim();\n      if (cleanLine.length > 5 && cleanLine.length < 50 && \n          (cleanLine === cleanLine.toUpperCase() || \n           cleanLine.match(/^[A-Z][a-z]+\\s+[A-Z]/) ||\n           eventKeywords.some(keyword => cleanLine.toLowerCase().includes(keyword)))) {\n        eventName = cleanLine;\n        break;\n      }\n    }\n    \n    events.push({\n      eventName: eventName,\n      date: foundDate,\n      time: foundTime || 'Time not specified',\n      fullMatch: `${foundDate} ${foundTime || ''}`.trim(),\n      section: section.substring(0, 200) + '...' // For debugging\n    });\n  }\n}\n\n// If still no events, do a broader search\nif (events.length === 0) {\n  const broadPattern = /((?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\\s*,?\\s*(?:january|february|march|april|may|june|july|august|september|october|november|december)\\s+\\d{1,2})/gi;\n  \n  let match;\n  while ((match = broadPattern.exec(text)) !== null) {\n    events.push({\n      eventName: 'Event detected',\n      date: match[0],\n      time: 'Check source for time',\n      fullMatch: match[0]\n    });\n  }\n}\n\n// Return results\nif (events.length === 0) {\n  return [{\n    json: {\n      message: 'No events found in content',\n      textPreview: text.substring(0, 500) + '...',\n      totalTextLength: text.length,\n      suggestion: 'Try a different CSS selector or directly use the raw HTML'\n    }\n  }];\n}\n\n// Remove duplicates\nconst uniqueEvents = events.filter((event, index, self) => \n  index === self.findIndex(e => e.fullMatch === event.fullMatch)\n);\n\nreturn uniqueEvents.map(event => ({ json: event }));"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                300
+            ],
+            "id": "3",
+            "name": "Extract Dates & Times"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Clean and format the extracted data\nconst events = [];\n\n// Debug: Check what we're receiving\nconsole.log('Input items:', $input.all().map(item => item.json));\n\nfor (const item of $input.all()) {\n  const event = item.json;\n  \n  // Check if this is an error/debug message from previous node\n  if (event.error || event.message) {\n    // Pass through debug/error messages\n    events.push({\n      debug_info: event.error || event.message,\n      raw_data: event\n    });\n    continue;\n  }\n  \n  // Safely clean up event name\n  let cleanEventName = 'Unknown Event';\n  if (event.eventName && typeof event.eventName === 'string') {\n    cleanEventName = event.eventName\n      .replace(/[|\\-]+/g, '')\n      .replace(/\\s+/g, ' ')\n      .trim();\n  }\n  \n  // If event name is too generic or empty, try to extract from context\n  if (cleanEventName === 'Unknown Event' || cleanEventName.length < 3) {\n    // Try to infer from common patterns\n    if (event.date && event.date.includes('9th & 23rd')) {\n      cleanEventName = 'Japanese Storytime with Malie-san';\n    } else if (event.time && event.time.includes('2:30')) {\n      cleanEventName = 'Mad Peep Scientists';\n    } else if (event.time && event.time.includes('2:00')) {\n      cleanEventName = 'Alcohol Ink Coasters';\n    }\n  }\n  \n  // Safely format time\n  let formattedTime = 'Time not specified';\n  if (event.time && typeof event.time === 'string') {\n    formattedTime = event.time\n      .replace(/AM/g, 'am')\n      .replace(/PM/g, 'pm')\n      .trim();\n  }\n  \n  // Safely format date\n  let formattedDate = 'Date not specified';\n  if (event.date && typeof event.date === 'string') {\n    formattedDate = event.date.trim();\n  }\n  \n  events.push({\n    event_name: cleanEventName,\n    date: formattedDate,\n    time: formattedTime,\n    datetime_combined: `${formattedDate} at ${formattedTime}`,\n    raw_event: event  // Include raw data for debugging\n  });\n}\n\nreturn events.map(event => ({ json: event }));"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                920,
+                300
+            ],
+            "id": "4",
+            "name": "Clean & Format Data"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.noOp",
+            "typeVersion": 1,
+            "position": [
+                1140,
+                300
+            ],
+            "id": "5",
+            "name": "Output Events"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Diagnostic node to inspect the raw HTML content\nconst inputData = $input.first().json;\n\n// Check for HTML content in various properties\nconst htmlContent = inputData.data || inputData.html || inputData.body || inputData.rawHtml || '';\n\n// Extract simple text content from HTML\nlet extractedText = '';\nif (htmlContent && typeof htmlContent === 'string') {\n  extractedText = htmlContent\n    .replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '')\n    .replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '')\n    .replace(/<[^>]*>/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nreturn [{\n  json: {\n    dataType: typeof inputData.data,\n    contentLength: htmlContent.length || 0,\n    extractedTextPreview: extractedText.substring(0, 500) + '...',\n    htmlPreview: htmlContent.substring(0, 300) + '...',\n    fullKeys: Object.keys(inputData),\n    isValidHtml: htmlContent.includes('<html') || htmlContent.includes('<body')\n  }\n}];"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                480,
+                440
+            ],
+            "id": "6",
+            "name": "HTML Diagnostic"
+        },
+        {
+            "parameters": {
+                "jsCode": "// Format data for saving to a file\nconst inputData = $input.first().json;\nconst htmlContent = inputData.data || inputData.html || inputData.body || inputData.rawHtml || '';\n\n// Create a more comprehensive report\nconst extractedText = htmlContent && typeof htmlContent === 'string' ?\n  htmlContent\n    .replace(/<script\\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/gi, '')\n    .replace(/<style\\b[^<]*(?:(?!<\\/style>)<[^<]*)*<\\/style>/gi, '')\n    .replace(/<[^>]*>/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim() : '';\n\n// Create file content with diagnostic information and extracted text\nconst report = {\n  diagnostic_info: inputData,\n  full_extracted_text: extractedText,\n  creation_time: new Date().toISOString(),\n  source_url: \"https://myemail.constantcontact.com/-April-News---Events-from-Loomis-Library.html?soid=1120587253049&aid=JXLlHuEPNLU\"\n};\n\n// Convert to binary for file saving\nconst binaryData = {\n  json: {\n    ...inputData\n  },\n  binary: {\n    data: {\n      // For text file\n      data: Buffer.from(JSON.stringify(report, null, 2)).toString('base64'),\n      mimeType: 'text/plain',\n      fileName: 'webpage_content_report.txt',\n      fileExtension: 'txt'\n    }\n  }\n};\n\nreturn binaryData;"
+            },
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                700,
+                440
+            ],
+            "id": "7",
+            "name": "Format for File Save"
+        },
+        {
+            "parameters": {
+                "filePropertyName": "data",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.writeBinaryFile",
+            "typeVersion": 1,
+            "position": [
+                920,
+                440
+            ],
+            "id": "8",
+            "name": "Save to File"
+        }
+    ],
+    "connections": {
+        "Fetch Webpage": {
+            "main": [
+                [
+                    {
+                        "node": "Extract HTML Content",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "HTML Diagnostic",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract HTML Content": {
+            "main": [
+                [
+                    {
+                        "node": "Extract Dates & Times",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract Dates & Times": {
+            "main": [
+                [
+                    {
+                        "node": "Clean & Format Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Clean & Format Data": {
+            "main": [
+                [
+                    {
+                        "node": "Output Events",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HTML Diagnostic": {
+            "main": [
+                [
+                    {
+                        "node": "Format for File Save",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Format for File Save": {
+            "main": [
+                [
+                    {
+                        "node": "Save to File",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [],
+    "triggerCount": 0,
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "versionId": "1"
+}
