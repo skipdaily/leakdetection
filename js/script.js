@@ -1,5 +1,20 @@
 // Main JavaScript file for Leak Detection website
 
+// Sticky header functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.getElementById('stickyHeader');
+
+    if (header) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
+});
+
 // Pricing structure for leak detection services
 const pricingStructure = {
     // Base inspection fees based on property type

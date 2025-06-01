@@ -24,10 +24,21 @@ body {
 /* Header Styles */
 header {
     border-bottom: 1px solid #e9eaf2;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #f9f9fb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
 }
 
 header a.active {
     border-bottom: 2px solid #0f111a;
+}
+
+/* When header is sticky and user scrolls */
+header.scrolled {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Hero Section */
