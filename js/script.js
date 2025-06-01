@@ -522,11 +522,11 @@ async function submitFormData(formData) {
     try {
         // Show processing message in console
         console.log('Processing form submission...');
-        
+
         // First try to submit to our own API endpoint
         const apiUrl = '/api/submit-form';
         console.log(`Submitting to API endpoint: ${apiUrl}`);
-        
+
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
@@ -534,13 +534,13 @@ async function submitFormData(formData) {
             },
             body: JSON.stringify(formData)
         });
-        
+
         if (!response.ok) {
             console.warn(`API request failed with status ${response.status}. Falling back to EmailJS.`);
             // If the server-side submission fails, fallback to EmailJS
             return await submitViaEmailJS(formData);
         }
-        
+
         const result = await response.json();
         console.log('Form submitted successfully:', result);
         return result;
