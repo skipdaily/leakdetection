@@ -11,6 +11,20 @@ The form submission system allows customers to schedule leak detection services 
 3. Database storage for all form submissions
 4. Admin dashboard to manage submissions
 
+## Quick Start
+
+For the quickest setup, simply run:
+
+```bash
+./run.sh
+```
+
+This script will:
+1. Check if the `.env` file exists and create it if needed
+2. Install dependencies
+3. Offer to apply the Supabase schema
+4. Start the server
+
 ## Database Setup
 
 ### 1. Supabase Setup
@@ -19,86 +33,71 @@ The form submission system allows customers to schedule leak detection services 
 2. Create a new project in Supabase
 3. Go to the SQL Editor in Supabase
 4. Copy the contents of `docs/database_schema.sql` and run it in the SQL Editor
-5. Note your Supabase URL and anon key (found in Project Settings > API)
+5. Or use our automated script:
+   ```bash
+   ./scripts/apply-schema.sh
+   ```
+6. Note your Supabase URL and anon key (found in Project Settings > API)
+### 2. Environment Variables
 
-### 2. Update API Configuration
-
-1. Open `api/submit-form.js`
-2. Replace the placeholder values with your actual Supabase credentials:
-   ```javascript
-   const SUPABASE_URL = 'your-supabase-url';
-   const SUPABASE_KEY = 'your-supabase-anon-key';
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
    ```
 
-3. Set up email configuration:
-   ```javascript
-   const transporter = nodemailer.createTransport({
-     service: 'gmail',
-     auth: {
-       user: 'your-email@gmail.com', // Replace with your email
-       pass: 'your-app-password'     // Replace with your app password
-     }
-   });
+2. Edit the `.env` file with your credentials:
    ```
+   SUPABASE_URL=https://dglezauqqxybwiyfiriz.supabase.co
+   SUPABASE_KEY=your-supabase-anon-key
+   SUPABASE_SERVICE_KEY=your-supabase-service-key
+   
+   EMAIL_SERVICE=gmail
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASS=your-app-password
+   EMAIL_RECIPIENT=tomgouldmaui@gmail.com
+   
+   PORT=3000
+   ```
+
+## Running the Server
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the server:
+   ```bash
+   npm start
+   ```
+
+Or simply use the provided script:
+```bash
+./run.sh
+```
 
 ## Deployment Options
 
 ### Option 1: EmailJS (Simple, Client-Side Only)
 
-This option requires no backend server:
+This option requires no backend server and is used as a fallback:
 
 1. Create an [EmailJS](https://www.emailjs.com/) account
 2. Follow the instructions in `docs/emailjs-setup.html`
 3. Update the EmailJS configuration in `schedule.html`
 
-### Option 2: Node.js Server with API Endpoint
+### Option 2: Node.js Server (Included)
 
-1. Install Node.js dependencies:
+Our project already includes a Node.js server setup:
+
+1. Make sure you've configured the `.env` file
+2. Start the server:
    ```bash
-   npm init -y
-   npm install express nodemailer @supabase/supabase-js cors dotenv
+   npm start
    ```
+3. The server will handle form submissions at `/api/submit-form`
 
-2. Create a `.env` file with your credentials:
-   ```
-   SUPABASE_URL=your-supabase-url
-   SUPABASE_KEY=your-supabase-anon-key
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-app-password
-   ```
-
-3. Create a server.js file:
-   ```javascript
-   const express = require('express');
-   const cors = require('cors');
-   const { handler } = require('./api/submit-form');
-   
-   const app = express();
-   const PORT = process.env.PORT || 3001;
-   
-   app.use(cors());
-   app.use(express.json());
-   
-   app.post('/api/submit-form', async (req, res) => {
-     try {
-       const result = await handler({ body: JSON.stringify(req.body) });
-       res.status(result.statusCode).json(JSON.parse(result.body));
-     } catch (error) {
-       res.status(500).json({ error: error.message });
-     }
-   });
-   
-   app.listen(PORT, () => {
-     console.log(`Server running on port ${PORT}`);
-   });
-   ```
-
-4. Start the server:
-   ```bash
-   node server.js
-   ```
-
-### Option 3: Serverless Functions (Recommended)
+### Option 3: Serverless Functions (Production Recommended)
 
 Deploy the API endpoint as a serverless function:
 

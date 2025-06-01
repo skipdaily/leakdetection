@@ -3,20 +3,20 @@
 
 const nodemailer = require('nodemailer');
 const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
 
 // Supabase configuration
-// Replace these with your actual Supabase credentials
-const SUPABASE_URL = 'your-supabase-url';
-const SUPABASE_KEY = 'your-supabase-anon-key';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dglezauqqxybwiyfiriz.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'your-supabase-anon-key';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Create a nodemailer transporter for sending emails
 // This is configured for Gmail, but you can use any email service
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: process.env.EMAIL_SERVICE || 'gmail',
     auth: {
-        user: 'your-email@gmail.com', // Replace with your email
-        pass: 'your-app-password'     // Replace with your app password (not your regular password)
+        user: process.env.EMAIL_USER || 'your-email@gmail.com', // Replace with your email
+        pass: process.env.EMAIL_PASS || 'your-app-password'     // Replace with your app password (not your regular password)
     }
 });
 
@@ -79,74 +79,74 @@ async function sendEmail(formData) {
 
 // Function to save data to Supabase
 async function saveToSupabase(formData) {
-  try {
-    // Create arrays of services
-    const servicesList = [];
-    if (formData.services.comprehensive) {
-      servicesList.push('Comprehensive Package');
-    } else {
-      if (formData.services.water) servicesList.push('Water Leak Detection');
-      if (formData.services.gas) servicesList.push('Gas Leak Detection');
-      if (formData.services.co) servicesList.push('Carbon Monoxide Detection');
-    }
-
-    // Call the stored procedure to save all data in a transaction
-    const { data, error } = await supabase.rpc('save_service_request', {
-      p_first_name: formData.contact.firstName,
-      p_last_name: formData.contact.lastName,
-      p_email: formData.contact.email,
-      p_phone: formData.contact.phone,
-      p_street_address: formData.property.address,
-      p_city: formData.property.city,
-      p_zip_code: formData.property.zipCode,
-      p_property_type: formData.property.type,
-      p_property_size: formData.property.size,
-      p_preferred_date: formData.appointment.date,
-      p_preferred_time: formData.appointment.time,
-      p_special_notes: formData.property.specialNotes || '',
-      p_how_heard: formData.contact.howHeard || '',
-      p_services: servicesList,
-      p_base_inspection_fee: formData.pricing.baseInspectionFee,
-      p_service_type_fee: formData.pricing.serviceTypeFee,
-      p_property_size_fee: formData.pricing.propertySizeFee,
-      p_weekend_fee: formData.pricing.weekendFee,
-      p_total_price: formData.pricing.totalPrice
-    });
-    
-    if (error) throw error;
-    
-    // Log the email
-    await supabase
-      .from('email_logs')
-      .insert([{
-        service_request_id: data,
-        recipient: formData.recipientEmail,
-        subject: 'New Leak Detection Service Request',
-        message: JSON.stringify(formData, null, 2),
-        status: 'sent'
-      }]);
-    
-    return data;
-  } catch (error) {
-    console.error('Error saving to Supabase:', error);
-    
-    // Log the failed email
     try {
-      await supabase
-        .from('email_logs')
-        .insert([{
-          recipient: formData.recipientEmail,
-          subject: 'New Leak Detection Service Request',
-          message: JSON.stringify(formData, null, 2),
-          status: 'failed',
-          error_message: error.message
-        }]);
-    } catch (logError) {
-      console.error('Error logging failed email:', logError);
+        // Create arrays of services
+        const servicesList = [];
+        if (formData.services.comprehensive) {
+            servicesList.push('Comprehensive Package');
+        } else {
+            if (formData.services.water) servicesList.push('Water Leak Detection');
+            if (formData.services.gas) servicesList.push('Gas Leak Detection');
+            if (formData.services.co) servicesList.push('Carbon Monoxide Detection');
+        }
+
+        // Call the stored procedure to save all data in a transaction
+        const { data, error } = await supabase.rpc('save_service_request', {
+            p_first_name: formData.contact.firstName,
+            p_last_name: formData.contact.lastName,
+            p_email: formData.contact.email,
+            p_phone: formData.contact.phone,
+            p_street_address: formData.property.address,
+            p_city: formData.property.city,
+            p_zip_code: formData.property.zipCode,
+            p_property_type: formData.property.type,
+            p_property_size: formData.property.size,
+            p_preferred_date: formData.appointment.date,
+            p_preferred_time: formData.appointment.time,
+            p_special_notes: formData.property.specialNotes || '',
+            p_how_heard: formData.contact.howHeard || '',
+            p_services: servicesList,
+            p_base_inspection_fee: formData.pricing.baseInspectionFee,
+            p_service_type_fee: formData.pricing.serviceTypeFee,
+            p_property_size_fee: formData.pricing.propertySizeFee,
+            p_weekend_fee: formData.pricing.weekendFee,
+            p_total_price: formData.pricing.totalPrice
+        });
+
+        if (error) throw error;
+
+        // Log the email
+        await supabase
+            .from('email_logs')
+            .insert([{
+                service_request_id: data,
+                recipient: formData.recipientEmail,
+                subject: 'New Leak Detection Service Request',
+                message: JSON.stringify(formData, null, 2),
+                status: 'sent'
+            }]);
+
+        return data;
+    } catch (error) {
+        console.error('Error saving to Supabase:', error);
+
+        // Log the failed email
+        try {
+            await supabase
+                .from('email_logs')
+                .insert([{
+                    recipient: formData.recipientEmail,
+                    subject: 'New Leak Detection Service Request',
+                    message: JSON.stringify(formData, null, 2),
+                    status: 'failed',
+                    error_message: error.message
+                }]);
+        } catch (logError) {
+            console.error('Error logging failed email:', logError);
+        }
+
+        throw error;
     }
-    
-    throw error;
-  }
 }
 
 // Function to format email content

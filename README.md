@@ -17,8 +17,10 @@ A comprehensive website for a professional leak detection service that allows us
 - HTML5
 - CSS3 with Tailwind CSS
 - JavaScript (vanilla)
+- Node.js and Express for the server
 - Supabase for database storage
-- EmailJS for form submission
+- EmailJS as a fallback for form submission
+- Nodemailer for email notifications
 - Responsive Design
 
 ## Pages
@@ -33,24 +35,43 @@ A comprehensive website for a professional leak detection service that allows us
 
 ## Setup
 
-### Basic Setup
+### Quick Start
 
-Simply clone the repository and open the HTML files in your browser, or serve it using a local development server.
+Run the setup script to install dependencies, configure environment, and start the server:
 
 ```bash
-# Example using Python's built-in HTTP server
-python -m http.server 8000
+./run.sh
 ```
 
-Then navigate to `http://localhost:8000` in your browser.
+Then visit `http://localhost:3000` in your browser.
 
-### Form Submission Setup
+### Manual Setup
 
-To enable form submission functionality:
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-1. Follow the instructions in `docs/form_submission_setup.md` to set up the database
-2. Configure EmailJS by following `docs/emailjs-setup.html`
-3. Create the database tables using the SQL in `docs/database_schema.sql`
+2. Create `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+   Then edit with your Supabase credentials:
+   ```
+   SUPABASE_URL=https://dglezauqqxybwiyfiriz.supabase.co
+   SUPABASE_KEY=your-supabase-anon-key
+   SUPABASE_SERVICE_KEY=your-supabase-service-key
+   ```
+
+3. Apply the database schema to Supabase:
+   ```bash
+   ./scripts/apply-schema.sh
+   ```
+
+4. Start the server:
+   ```bash
+   npm start
+   ```
 
 ### Admin Dashboard
 

@@ -520,24 +520,30 @@ function collectFormData() {
 // Function to submit form data
 async function submitFormData(formData) {
     try {
-        // First approach: EmailJS (client-side)
-        // This is a simple solution that works without a backend
-
-        // Call your submission endpoint
-        const response = await fetch('/api/submit-form', {
+        // Show processing message in console
+        console.log('Processing form submission...');
+        
+        // First try to submit to our own API endpoint
+        const apiUrl = '/api/submit-form';
+        console.log(`Submitting to API endpoint: ${apiUrl}`);
+        
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         });
-
+        
         if (!response.ok) {
+            console.warn(`API request failed with status ${response.status}. Falling back to EmailJS.`);
             // If the server-side submission fails, fallback to EmailJS
             return await submitViaEmailJS(formData);
         }
-
-        return await response.json();
+        
+        const result = await response.json();
+        console.log('Form submitted successfully:', result);
+        return result;
     } catch (error) {
         console.error('Error submitting form:', error);
         // Fallback to EmailJS if the server endpoint is unavailable
