@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EmailJS Setup for Leak Detection</title>
-  <style>
-    body {
-      font-family: 'Public Sans', 'Noto Sans', sans-serif;
-      background-color: #f9f9fb;
-      color: #0f111a;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      color: #0f111a;
-    }
-    pre {
-      background-color: #f1f1f1;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    code {
-      font-family: monospace;
-    }
-    ol li, ul li {
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Setup for Leak Detection</title>
+    <style>
+        body {
+            font-family: 'Public Sans', 'Noto Sans', sans-serif;
+            background-color: #f9f9fb;
+            color: #0f111a;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #0f111a;
+        }
+
+        pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: monospace;
+        }
+
+        ol li,
+        ul li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>EmailJS Setup for Leak Detection</h1>
-    
-    <p>This guide explains how to set up EmailJS to handle form submissions without requiring a backend server.</p>
-    
-    <h2>Step 1: Create an EmailJS Account</h2>
-    <ol>
-      <li>Go to <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> and create a free account</li>
-      <li>Verify your email address</li>
-    </ol>
-    
-    <h2>Step 2: Connect an Email Service</h2>
-    <ol>
-      <li>In the EmailJS dashboard, go to "Email Services"</li>
-      <li>Click "Add New Service"</li>
-      <li>Select a service (Gmail, Outlook, etc.)</li>
-      <li>Follow the steps to connect your email account</li>
-      <li>Name your service (e.g., "leak-detection-service")</li>
-    </ol>
-    
-    <h2>Step 3: Create an Email Template</h2>
-    <ol>
-      <li>Go to "Email Templates"</li>
-      <li>Click "Create New Template"</li>
-      <li>Design your email template with placeholders for the form data</li>
-      <li>Here's a simple example:</li>
-    </ol>
-    
-    <pre><code>Subject: New Leak Detection Service Request from {{from_name}}
+    <div class="container">
+        <h1>EmailJS Setup for Leak Detection</h1>
+
+        <p>This guide explains how to set up EmailJS to handle form submissions without requiring a backend server.</p>
+
+        <h2>Step 1: Create an EmailJS Account</h2>
+        <ol>
+            <li>Go to <a href="https://www.emailjs.com/" target="_blank">EmailJS</a> and create a free account</li>
+            <li>Verify your email address</li>
+        </ol>
+
+        <h2>Step 2: Connect an Email Service</h2>
+        <ol>
+            <li>In the EmailJS dashboard, go to "Email Services"</li>
+            <li>Click "Add New Service"</li>
+            <li>Select a service (Gmail, Outlook, etc.)</li>
+            <li>Follow the steps to connect your email account</li>
+            <li>Name your service (e.g., "leak-detection-service")</li>
+        </ol>
+
+        <h2>Step 3: Create an Email Template</h2>
+        <ol>
+            <li>Go to "Email Templates"</li>
+            <li>Click "Create New Template"</li>
+            <li>Design your email template with placeholders for the form data</li>
+            <li>Here's a simple example:</li>
+        </ol>
+
+        <pre><code>Subject: New Leak Detection Service Request from {{from_name}}
 
 Hi,
 
@@ -94,23 +103,23 @@ Special Notes:
 
 This email was sent from the Leak Detection website.
     </code></pre>
-    
-    <h2>Step 4: Add EmailJS to Your Website</h2>
-    <ol>
-      <li>Add the EmailJS SDK to your website by adding this to the &lt;head&gt; section of your HTML:</li>
-    </ol>
-    
-    <pre><code>&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"&gt;&lt;/script&gt;
+
+        <h2>Step 4: Add EmailJS to Your Website</h2>
+        <ol>
+            <li>Add the EmailJS SDK to your website by adding this to the &lt;head&gt; section of your HTML:</li>
+        </ol>
+
+        <pre><code>&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
   (function() {
     emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
   })();
 &lt;/script&gt;</code></pre>
-    
-    <h2>Step 5: Update the Form Submission Code</h2>
-    <p>Replace the <code>submitViaEmailJS</code> function in script.js with this:</p>
-    
-    <pre><code>// Fallback function to submit via EmailJS (client-side)
+
+        <h2>Step 5: Update the Form Submission Code</h2>
+        <p>Replace the <code>submitViaEmailJS</code> function in script.js with this:</p>
+
+        <pre><code>// Fallback function to submit via EmailJS (client-side)
 async function submitViaEmailJS(formData) {
   try {
     // Format services
@@ -160,22 +169,24 @@ async function submitViaEmailJS(formData) {
     return { success: true, method: "mailto" };
   }
 }</code></pre>
-    
-    <h2>Step 6: Testing</h2>
-    <ul>
-      <li>Fill out the form on your website</li>
-      <li>Submit the form and check if the email is delivered</li>
-      <li>Check your EmailJS dashboard for delivery status</li>
-    </ul>
-    
-    <h2>Step 7: Adjust and Improve</h2>
-    <ul>
-      <li>Modify the email template to better format the data</li>
-      <li>Add error handling for failed submissions</li>
-      <li>Consider upgrading to a paid plan if you need more emails per month</li>
-    </ul>
-    
-    <p><strong>Note:</strong> The free tier of EmailJS allows 200 emails per month, which should be sufficient for testing and low-volume use.</p>
-  </div>
+
+        <h2>Step 6: Testing</h2>
+        <ul>
+            <li>Fill out the form on your website</li>
+            <li>Submit the form and check if the email is delivered</li>
+            <li>Check your EmailJS dashboard for delivery status</li>
+        </ul>
+
+        <h2>Step 7: Adjust and Improve</h2>
+        <ul>
+            <li>Modify the email template to better format the data</li>
+            <li>Add error handling for failed submissions</li>
+            <li>Consider upgrading to a paid plan if you need more emails per month</li>
+        </ul>
+
+        <p><strong>Note:</strong> The free tier of EmailJS allows 200 emails per month, which should be sufficient for
+            testing and low-volume use.</p>
+    </div>
 </body>
+
 </html>

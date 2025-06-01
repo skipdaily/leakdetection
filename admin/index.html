@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" />
+
+  <title>Admin Dashboard - Leak Detection</title>
+  <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <div class="relative flex size-full min-h-screen flex-col bg-[#f9f9fb] group/design-root overflow-x-hidden"
+    style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+      <header
+        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e9eaf2] px-10 py-3">
+        <div class="flex items-center gap-4 text-[#0f111a]">
+          <a href="../index.html" class="flex items-center gap-4">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                  fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 class="text-[#0f111a] text-lg font-bold leading-tight tracking-[-0.015em]">Leak Detection Admin</h2>
+          </a>
+        </div>
+        <div class="flex flex-1 justify-end gap-8">
+          <div class="flex items-center gap-9">
+            <a class="text-[#0f111a] text-sm font-medium leading-normal border-b-2 border-[#0f111a]" href="#">Dashboard</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="#service-requests">Service Requests</a>
+            <a class="text-[#0f111a] text-sm font-medium leading-normal" href="#customers">Customers</a>
+            <button id="logout-button" class="text-[#0f111a] text-sm font-medium leading-normal">Logout</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="px-10 md:px-20 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+          
+          <!-- Login Section (shown if not logged in) -->
+          <div id="login-section" class="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <h2 class="text-[#0f111a] text-xl font-bold mb-4">Admin Login</h2>
+            <form id="login-form" class="space-y-4">
+              <div>
+                <label class="block text-[#0f111a] text-sm font-medium mb-2" for="email">Email</label>
+                <input type="email" id="email" required
+                  class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+              </div>
+              <div>
+                <label class="block text-[#0f111a] text-sm font-medium mb-2" for="password">Password</label>
+                <input type="password" id="password" required
+                  class="w-full rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-3 text-[#0f111a]">
+              </div>
+              <button type="submit"
+                class="flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+                Login
+              </button>
+              <div id="login-error" class="text-red-500 text-sm hidden"></div>
+            </form>
+          </div>
+          
+          <!-- Dashboard Content (shown when logged in) -->
+          <div id="dashboard-content" class="hidden">
+            <h1 class="text-[#0f111a] text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">Admin Dashboard</h1>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="text-[#56618f] text-sm font-medium">Total Requests</h3>
+                <p id="total-requests" class="text-[#0f111a] text-2xl font-bold">0</p>
+              </div>
+              <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="text-[#56618f] text-sm font-medium">Pending</h3>
+                <p id="pending-requests" class="text-[#0f111a] text-2xl font-bold">0</p>
+              </div>
+              <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="text-[#56618f] text-sm font-medium">Confirmed</h3>
+                <p id="confirmed-requests" class="text-[#0f111a] text-2xl font-bold">0</p>
+              </div>
+              <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="text-[#56618f] text-sm font-medium">Total Revenue</h3>
+                <p id="total-revenue" class="text-[#0f111a] text-2xl font-bold">$0.00</p>
+              </div>
+            </div>
+            
+            <!-- Service Requests Section -->
+            <div id="service-requests" class="mb-8">
+              <h2 class="text-[#0f111a] text-2xl font-bold leading-tight tracking-[-0.015em] mb-4">Service Requests</h2>
+              
+              <!-- Filter Controls -->
+              <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
+                <div class="flex flex-wrap gap-4">
+                  <div>
+                    <label class="block text-[#0f111a] text-sm font-medium mb-2" for="status-filter">Status</label>
+                    <select id="status-filter" 
+                      class="rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-2 text-[#0f111a] text-sm">
+                      <option value="">All Statuses</option>
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[#0f111a] text-sm font-medium mb-2" for="date-filter">Date Range</label>
+                    <div class="flex gap-2 items-center">
+                      <input type="date" id="date-from"
+                        class="rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-2 text-[#0f111a] text-sm">
+                      <span>to</span>
+                      <input type="date" id="date-to"
+                        class="rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-2 text-[#0f111a] text-sm">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[#0f111a] text-sm font-medium mb-2" for="service-filter">Service Type</label>
+                    <select id="service-filter"
+                      class="rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-2 text-[#0f111a] text-sm">
+                      <option value="">All Services</option>
+                      <option value="Water Leak Detection">Water Leak Detection</option>
+                      <option value="Gas Leak Detection">Gas Leak Detection</option>
+                      <option value="Carbon Monoxide Detection">Carbon Monoxide Detection</option>
+                      <option value="Comprehensive Package">Comprehensive Package</option>
+                    </select>
+                  </div>
+                  <div class="ml-auto self-end">
+                    <button id="apply-filters"
+                      class="flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+                      Apply Filters
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Requests Table -->
+              <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-[#e9eaf2]">
+                    <thead>
+                      <tr>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          ID</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Customer</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Service</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Date</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Time</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Total</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Status</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="service-requests-table" class="bg-white divide-y divide-[#e9eaf2]">
+                      <!-- Table rows will be inserted here by JavaScript -->
+                      <tr>
+                        <td colspan="8" class="px-4 py-4 text-center text-[#56618f]">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Customers Section -->
+            <div id="customers" class="mb-8">
+              <h2 class="text-[#0f111a] text-2xl font-bold leading-tight tracking-[-0.015em] mb-4">Customers</h2>
+              
+              <!-- Customers Table -->
+              <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-[#e9eaf2]">
+                    <thead>
+                      <tr>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Name</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Email</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Phone</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Total Requests</th>
+                        <th
+                          class="px-4 py-3 bg-[#f9f9fb] text-left text-xs font-medium text-[#56618f] uppercase tracking-wider">
+                          Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customers-table" class="bg-white divide-y divide-[#e9eaf2]">
+                      <!-- Table rows will be inserted here by JavaScript -->
+                      <tr>
+                        <td colspan="5" class="px-4 py-4 text-center text-[#56618f]">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request Details Modal -->
+      <div id="request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div class="p-6 border-b border-[#e9eaf2] flex justify-between items-center">
+            <h3 class="text-[#0f111a] text-xl font-bold">Service Request Details</h3>
+            <button id="close-request-modal" class="text-[#56618f] hover:text-[#0f111a]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+              </svg>
+            </button>
+          </div>
+          <div id="request-modal-content" class="p-6">
+            <!-- Modal content will be inserted here by JavaScript -->
+            <p class="text-center text-[#56618f]">Loading...</p>
+          </div>
+          <div class="p-6 border-t border-[#e9eaf2] flex justify-end gap-4">
+            <button id="update-status-button"
+              class="flex justify-center items-center rounded-full h-10 px-4 bg-[#e9ecfa] text-[#0f111a] text-sm font-bold leading-normal tracking-[0.015em]">
+              Update Status
+            </button>
+            <button id="close-modal-button"
+              class="flex justify-center items-center rounded-full h-10 px-4 border border-[#d2d6e4] text-[#56618f] text-sm font-medium leading-normal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-10 border-t border-solid border-t-[#e9eaf2] py-6 px-10">
+        <div class="flex justify-between items-center">
+          <p class="text-[#56618f] text-sm">© 2025 Leak Detection Admin. All rights reserved.</p>
+          <p class="text-[#56618f] text-sm">Version 1.0.0</p>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Supabase client
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    
+    // DOM Elements
+    const loginSection = document.getElementById('login-section');
+    const dashboardContent = document.getElementById('dashboard-content');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const logoutButton = document.getElementById('logout-button');
+    const serviceRequestsTable = document.getElementById('service-requests-table');
+    const customersTable = document.getElementById('customers-table');
+    const totalRequestsElement = document.getElementById('total-requests');
+    const pendingRequestsElement = document.getElementById('pending-requests');
+    const confirmedRequestsElement = document.getElementById('confirmed-requests');
+    const totalRevenueElement = document.getElementById('total-revenue');
+    const requestModal = document.getElementById('request-modal');
+    const requestModalContent = document.getElementById('request-modal-content');
+    const closeRequestModal = document.getElementById('close-request-modal');
+    const closeModalButton = document.getElementById('close-modal-button');
+    const updateStatusButton = document.getElementById('update-status-button');
+    const applyFiltersButton = document.getElementById('apply-filters');
+    
+    // Check if user is logged in
+    async function checkUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        showDashboard();
+        loadDashboardData();
+      } else {
+        showLogin();
+      }
+    }
+    
+    // Show login form
+    function showLogin() {
+      loginSection.classList.remove('hidden');
+      dashboardContent.classList.add('hidden');
+    }
+    
+    // Show dashboard
+    function showDashboard() {
+      loginSection.classList.add('hidden');
+      dashboardContent.classList.remove('hidden');
+    }
+    
+    // Handle login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (error) throw error;
+        
+        showDashboard();
+        loadDashboardData();
+      } catch (error) {
+        loginError.textContent = error.message;
+        loginError.classList.remove('hidden');
+      }
+    });
+    
+    // Handle logout
+    logoutButton.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      showLogin();
+    });
+    
+    // Load dashboard data
+    async function loadDashboardData() {
+      loadServiceRequests();
+      loadCustomers();
+      loadSummaryData();
+    }
+    
+    // Load service requests
+    async function loadServiceRequests(filters = {}) {
+      serviceRequestsTable.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-[#56618f]">Loading...</td></tr>';
+      
+      try {
+        // Build query with filters
+        let query = supabase
+          .from('complete_service_requests')
+          .select('*');
+        
+        // Apply filters
+        if (filters.status) {
+          query = query.eq('status', filters.status);
+        }
+        
+        if (filters.dateFrom) {
+          query = query.gte('preferred_date', filters.dateFrom);
+        }
+        
+        if (filters.dateTo) {
+          query = query.lte('preferred_date', filters.dateTo);
+        }
+        
+        if (filters.service) {
+          query = query.contains('services', [filters.service]);
+        }
+        
+        // Execute query
+        const { data, error } = await query.order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data.length === 0) {
+          serviceRequestsTable.innerHTML = '<tr><td colspan="8" class="px-4 py-4 text-center text-[#56618f]">No service requests found.</td></tr>';
+          return;
+        }
+        
+        serviceRequestsTable.innerHTML = '';
+        data.forEach(request => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a]">${request.id.slice(0, 8)}...</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a]">${request.first_name} ${request.last_name}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${request.services.join(', ')}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${formatDate(request.preferred_date)}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${request.preferred_time}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-bold">$${parseFloat(request.total_price).toFixed(2)}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm">
+              <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(request.status)}">
+                ${capitalizeFirstLetter(request.status)}
+              </span>
+            </td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">
+              <button class="view-request-btn text-[#0f111a] hover:underline" data-id="${request.id}">View</button>
+            </td>
+          `;
+          serviceRequestsTable.appendChild(row);
+        });
+        
+        // Add event listeners to view buttons
+        document.querySelectorAll('.view-request-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            openRequestModal(button.dataset.id);
+          });
+        });
+      } catch (error) {
+        console.error('Error loading service requests:', error);
+        serviceRequestsTable.innerHTML = `<tr><td colspan="8" class="px-4 py-4 text-center text-red-500">Error: ${error.message}</td></tr>`;
+      }
+    }
+    
+    // Load customers
+    async function loadCustomers() {
+      customersTable.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-[#56618f]">Loading...</td></tr>';
+      
+      try {
+        const { data, error } = await supabase
+          .from('customers')
+          .select(`
+            id,
+            first_name,
+            email,
+            last_name,
+            phone,
+            service_requests:service_requests(count)
+          `)
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data.length === 0) {
+          customersTable.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-[#56618f]">No customers found.</td></tr>';
+          return;
+        }
+        
+        customersTable.innerHTML = '';
+        data.forEach(customer => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#0f111a] font-medium">${customer.first_name} ${customer.last_name}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${customer.email}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${customer.phone}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">${customer.service_requests.length}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm text-[#56618f]">
+              <button class="view-customer-btn text-[#0f111a] hover:underline" data-id="${customer.id}">View</button>
+            </td>
+          `;
+          customersTable.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading customers:', error);
+        customersTable.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-red-500">Error: ${error.message}</td></tr>`;
+      }
+    }
+    
+    // Load summary data
+    async function loadSummaryData() {
+      try {
+        // Get total requests
+        const { data: totalData, error: totalError } = await supabase
+          .from('service_requests')
+          .select('id', { count: 'exact' });
+        
+        if (totalError) throw totalError;
+        
+        // Get pending requests
+        const { data: pendingData, error: pendingError } = await supabase
+          .from('service_requests')
+          .select('id', { count: 'exact' })
+          .eq('status', 'pending');
+        
+        if (pendingError) throw pendingError;
+        
+        // Get confirmed requests
+        const { data: confirmedData, error: confirmedError } = await supabase
+          .from('service_requests')
+          .select('id', { count: 'exact' })
+          .eq('status', 'confirmed');
+        
+        if (confirmedError) throw confirmedError;
+        
+        // Get total revenue
+        const { data: revenueData, error: revenueError } = await supabase
+          .from('service_requests')
+          .select('total_price');
+        
+        if (revenueError) throw revenueError;
+        
+        const totalRevenue = revenueData.reduce((sum, request) => sum + parseFloat(request.total_price), 0);
+        
+        // Update UI
+        totalRequestsElement.textContent = totalData.length;
+        pendingRequestsElement.textContent = pendingData.length;
+        confirmedRequestsElement.textContent = confirmedData.length;
+        totalRevenueElement.textContent = `$${totalRevenue.toFixed(2)}`;
+      } catch (error) {
+        console.error('Error loading summary data:', error);
+      }
+    }
+    
+    // Open request modal
+    async function openRequestModal(id) {
+      requestModal.classList.remove('hidden');
+      requestModalContent.innerHTML = '<p class="text-center text-[#56618f]">Loading...</p>';
+      
+      try {
+        const { data, error } = await supabase
+          .from('complete_service_requests')
+          .select('*')
+          .eq('id', id)
+          .single();
+        
+        if (error) throw error;
+        
+        // Set current request ID for status update
+        updateStatusButton.dataset.id = id;
+        
+        // Format modal content
+        requestModalContent.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="text-[#0f111a] font-bold mb-2">Customer Information</h4>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Name:</span> ${data.first_name} ${data.last_name}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Email:</span> ${data.email}</p>
+              <p class="text-[#56618f] text-sm mb-4"><span class="font-medium">Phone:</span> ${data.phone}</p>
+              
+              <h4 class="text-[#0f111a] font-bold mb-2">Property Information</h4>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Address:</span> ${data.street_address}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">City:</span> ${data.city}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Zip Code:</span> ${data.zip_code}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Property Type:</span> ${data.property_type}</p>
+              <p class="text-[#56618f] text-sm mb-4"><span class="font-medium">Property Size:</span> ${data.property_size}</p>
+            </div>
+            <div>
+              <h4 class="text-[#0f111a] font-bold mb-2">Appointment Details</h4>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Date:</span> ${formatDate(data.preferred_date)}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Time:</span> ${data.preferred_time}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Services:</span> ${data.services.join(', ')}</p>
+              <p class="text-[#56618f] text-sm mb-4"><span class="font-medium">How Heard:</span> ${data.how_heard || 'Not specified'}</p>
+              
+              <h4 class="text-[#0f111a] font-bold mb-2">Price Details</h4>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Base Fee:</span> $${parseFloat(data.base_inspection_fee).toFixed(2)}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Service Fee:</span> $${parseFloat(data.service_type_fee).toFixed(2)}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Size Fee:</span> $${parseFloat(data.property_size_fee).toFixed(2)}</p>
+              <p class="text-[#56618f] text-sm mb-1"><span class="font-medium">Weekend Fee:</span> $${parseFloat(data.weekend_fee).toFixed(2)}</p>
+              <p class="text-[#0f111a] text-sm font-bold mb-4"><span class="font-medium">Total:</span> $${parseFloat(data.total_price).toFixed(2)}</p>
+              
+              <h4 class="text-[#0f111a] font-bold mb-2">Status</h4>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(data.status)}">
+                  ${capitalizeFirstLetter(data.status)}
+                </span>
+                <select id="status-select" class="ml-4 rounded-lg border border-[#d2d6e4] bg-[#f9f9fb] p-2 text-[#0f111a] text-sm">
+                  <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>Pending</option>
+                  <option value="confirmed" ${data.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                  <option value="completed" ${data.status === 'completed' ? 'selected' : ''}>Completed</option>
+                  <option value="cancelled" ${data.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h4 class="text-[#0f111a] font-bold mb-2">Special Notes</h4>
+            <p class="text-[#56618f] text-sm p-3 bg-[#f9f9fb] rounded-lg">${data.special_notes || 'No special notes provided.'}</p>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error loading request details:', error);
+        requestModalContent.innerHTML = `<p class="text-center text-red-500">Error: ${error.message}</p>`;
+      }
+    }
+    
+    // Close request modal
+    function closeRequestModal() {
+      requestModal.classList.add('hidden');
+    }
+    
+    // Update request status
+    async function updateRequestStatus(id) {
+      const statusSelect = document.getElementById('status-select');
+      const newStatus = statusSelect.value;
+      
+      try {
+        const { error } = await supabase
+          .from('service_requests')
+          .update({ status: newStatus })
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        // Reload data
+        loadDashboardData();
+        closeRequestModal();
+      } catch (error) {
+        console.error('Error updating status:', error);
+        alert(`Error updating status: ${error.message}`);
+      }
+    }
+    
+    // Apply filters to service requests
+    function applyFilters() {
+      const status = document.getElementById('status-filter').value;
+      const dateFrom = document.getElementById('date-from').value;
+      const dateTo = document.getElementById('date-to').value;
+      const service = document.getElementById('service-filter').value;
+      
+      loadServiceRequests({ status, dateFrom, dateTo, service });
+    }
+    
+    // Helper function to format date
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+    
+    // Helper function to get status class
+    function getStatusClass(status) {
+      switch (status) {
+        case 'pending':
+          return 'bg-yellow-100 text-yellow-800';
+        case 'confirmed':
+          return 'bg-blue-100 text-blue-800';
+        case 'completed':
+          return 'bg-green-100 text-green-800';
+        case 'cancelled':
+          return 'bg-red-100 text-red-800';
+        default:
+          return 'bg-gray-100 text-gray-800';
+      }
+    }
+    
+    // Helper function to capitalize first letter
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      checkUser();
+      
+      closeRequestModal.addEventListener('click', closeRequestModal);
+      closeModalButton.addEventListener('click', closeRequestModal);
+      
+      updateStatusButton.addEventListener('click', () => {
+        updateRequestStatus(updateStatusButton.dataset.id);
+      });
+      
+      applyFiltersButton.addEventListener('click', applyFilters);
+    });
+  </script>
+</body>
+
+</html>

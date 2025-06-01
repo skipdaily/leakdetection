@@ -64,34 +64,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const scheduleForm = document.querySelector('.schedule-form');
     const contactForm = document.querySelector('.contact-form');
     const submitButton = document.querySelector('.price-estimate-section button[type="submit"]');
-    
+
     if (submitButton) {
         submitButton.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Validate forms
             if (!validateForms()) {
                 alert('Please fill out all required fields.');
                 return;
             }
-            
+
             // Collect form data
             const formData = collectFormData();
-            
+
             // Show loading state
             this.innerHTML = '<span class="animate-pulse">Processing...</span>';
             this.disabled = true;
-            
+
             // Send form data
             submitFormData(formData)
                 .then(response => {
                     // Reset button state
                     this.innerHTML = 'Schedule Inspection';
                     this.disabled = false;
-                    
+
                     // Show success message
                     alert('Thank you for scheduling an inspection. We will confirm your appointment shortly.');
-                    
+
                     // Reset forms
                     document.querySelector('.schedule-form').reset();
                     document.querySelector('.contact-form').reset();
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Reset button state
                     this.innerHTML = 'Schedule Inspection';
                     this.disabled = false;
-                    
+
                     // Show error message
                     alert('There was an error submitting your request. Please try again or contact us directly.');
                     console.error('Form submission error:', error);
@@ -415,26 +415,26 @@ function validateForms() {
     const scheduleForm = document.querySelector('.schedule-form');
     const serviceTypes = document.querySelectorAll('.service-type-checkbox, #service-all');
     let serviceSelected = false;
-    
+
     serviceTypes.forEach(checkbox => {
         if (checkbox.checked) {
             serviceSelected = true;
         }
     });
-    
+
     if (!serviceSelected) {
         return false;
     }
-    
+
     const propertyType = document.getElementById('property-type').value;
     const propertySize = document.getElementById('property-size').value;
     const preferredDate = document.getElementById('preferred-date').value;
     const preferredTime = document.getElementById('preferred-time').value;
-    
+
     if (!propertyType || !propertySize || !preferredDate || !preferredTime) {
         return false;
     }
-    
+
     // Validate contact form
     const contactForm = document.querySelector('.contact-form');
     const firstName = document.getElementById('first-name').value;
@@ -443,11 +443,11 @@ function validateForms() {
     const phone = document.getElementById('phone').value;
     const address = document.getElementById('address').value;
     const termsAccepted = document.getElementById('terms').checked;
-    
+
     if (!firstName || !lastName || !email || !phone || !address || !termsAccepted) {
         return false;
     }
-    
+
     return true;
 }
 
@@ -458,14 +458,14 @@ function collectFormData() {
     const serviceGas = document.getElementById('service-gas')?.checked || false;
     const serviceCO = document.getElementById('service-co')?.checked || false;
     const serviceAll = document.getElementById('service-all')?.checked || false;
-    
+
     // Get property details
     const propertyType = document.getElementById('property-type').value;
     const propertySize = document.getElementById('property-size').value;
     const preferredDate = document.getElementById('preferred-date').value;
     const preferredTime = document.getElementById('preferred-time').value;
     const specialNotes = document.getElementById('special-notes').value;
-    
+
     // Get contact information
     const firstName = document.getElementById('first-name').value;
     const lastName = document.getElementById('last-name').value;
@@ -475,10 +475,10 @@ function collectFormData() {
     const city = document.querySelector('input[placeholder="City"]').value;
     const zipCode = document.querySelector('input[placeholder="Zip Code"]').value;
     const howHear = document.getElementById('how-hear').value;
-    
+
     // Get price breakdown
     const priceBreakdown = calculatePrice();
-    
+
     // Create form data object
     return {
         services: {
@@ -522,7 +522,7 @@ async function submitFormData(formData) {
     try {
         // First approach: EmailJS (client-side)
         // This is a simple solution that works without a backend
-        
+
         // Call your submission endpoint
         const response = await fetch('/api/submit-form', {
             method: 'POST',
@@ -531,12 +531,12 @@ async function submitFormData(formData) {
             },
             body: JSON.stringify(formData)
         });
-        
+
         if (!response.ok) {
             // If the server-side submission fails, fallback to EmailJS
             return await submitViaEmailJS(formData);
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error('Error submitting form:', error);
@@ -549,7 +549,7 @@ async function submitFormData(formData) {
 async function submitViaEmailJS(formData) {
     // For this to work, you need to include the EmailJS SDK and set up an account
     // This is just a placeholder - you'll need to implement this with actual EmailJS code
-    
+
     // Format the data for email
     const emailParams = {
         to_email: formData.recipientEmail,
@@ -557,13 +557,13 @@ async function submitViaEmailJS(formData) {
         subject: "New Leak Detection Service Request",
         message: JSON.stringify(formData, null, 2) // Pretty print the JSON
     };
-    
+
     // Simple email sending via mailto as a last resort
     // This will open the user's email client with the form data
     const mailtoLink = `mailto:${formData.recipientEmail}?subject=Leak Detection Service Request&body=${encodeURIComponent(JSON.stringify(formData, null, 2))}`;
-    
+
     // Open the mailto link in a new window
     window.open(mailtoLink, '_blank');
-    
+
     return { success: true, method: "mailto" };
 }
