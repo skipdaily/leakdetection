@@ -1,0 +1,34 @@
+{
+  "services": {
+    "water": true,
+    "gas": false,
+    "co": false,
+    "comprehensive": false
+  },
+  "property": {
+    "type": "house",
+    "size": "2bed",
+    "address": "123 Test St",
+    "city": "Sacramento",
+    "zipCode": "95814",
+    "specialNotes": "This is a test submission"
+  },
+  "appointment": {
+    "date": "2025-06-15",
+    "time": "afternoon"
+  },
+  "contact": {
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test@example.com",
+    "phone": "5551234567",
+    "howHeard": "internet"
+  },
+  "pricing": {
+    "baseInspectionFee": 150,
+    "serviceTypeFee": 50,
+    "propertySizeFee": 25,
+    "weekendFee": 0,
+    "totalPrice": 225
+  }
+}

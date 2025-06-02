@@ -1,192 +1,165 @@
-// API endpoint to handle form submissions
-// This file would typically be hosted on a server (Node.js, Vercel, Netlify, etc.)
+/**
+ * Simple API endpoint for local development
+ * 
+ * To use this:
+ * 1. Install Node.js if not already installed
+ * 2. Run `npm install express cors` in the leakdetection directory
+ * 3. Run `node api/submit-form.js` to start the API server
+ */
 
-const nodemailer = require('nodemailer');
+const express = require('express');
+const cors = require('cors');
+
+const fs = require('fs');
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config();
+const nodemailer = require('nodemailer');
 
-// Supabase configuration
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dglezauqqxybwiyfiriz.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_KEY || 'your-supabase-anon-key';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Try to load environment variables if .env file exists
+try {
+  require('dotenv').config();
+} catch (e) {
+  console.log("No .env file found or dotenv not installed. Using default values.");
+}
 
-// Create a nodemailer transporter for sending emails
-// This is configured for Gmail, but you can use any email service
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Enable CORS for local development
+app.use(cors());
+app.use(express.json());
+
+// Serve static files from the root directory
+app.use(express.static(path.join(__dirname, '..')));
+
+
+// Initialize Supabase client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+
+// Initialize Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE || 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER || 'your-email@gmail.com', // Replace with your email
-        pass: process.env.EMAIL_PASS || 'your-app-password'     // Replace with your app password (not your regular password)
-    }
+  service: process.env.EMAIL_SERVICE,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
-// Handler function for form submission
-exports.handler = async function (event, context) {
-    try {
-        // Parse the request body
-        const body = JSON.parse(event.body);
+// API endpoint to handle form submissions
+app.post('/api/submit-form', async (req, res) => {
+  const formData = req.body;
+  console.log('Received form submission:', formData);
 
-        // Send email
-        await sendEmail(body);
-
-        // Save to Supabase (optional)
-        if (SUPABASE_URL && SUPABASE_KEY) {
-            await saveToSupabase(body);
-        }
-
-        // Return success response
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Form submitted successfully' })
-        };
-    } catch (error) {
-        console.error('Error processing form submission:', error);
-
-        // Return error response
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'Error processing form submission', error: error.message })
-        };
+  // Save the form data to a JSON file (optional, for backup)
+  try {
+    const dataDir = path.join(__dirname, '../data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir);
     }
-};
+    const filename = `submission_${Date.now()}.json`;
+    fs.writeFileSync(
+      path.join(dataDir, filename),
+      JSON.stringify(formData, null, 2)
+    );
+  } catch (err) {
+    console.error('Failed to save local backup:', err);
+  }
 
-// Function to send email
-async function sendEmail(formData) {
-    // Format the email content
-    const emailContent = formatEmailContent(formData);
-
-    // Configure email options
-    const mailOptions = {
-        from: 'your-email@gmail.com',  // Replace with your email
-        to: formData.recipientEmail,
-        subject: 'New Leak Detection Service Request',
-        html: emailContent
-    };
-
-    // Send the email
-    return new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                reject(error);
-            } else {
-                console.log('Email sent successfully:', info.response);
-                resolve(info);
-            }
-        });
+  // Transform nested form data to the flat structure Supabase expects
+  // Map services to an array of service names
+  const selectedServices = [];
+  if (formData.services) {
+    if (formData.services.water) selectedServices.push('Water Leak Detection');
+    if (formData.services.gas) selectedServices.push('Gas Leak Detection');
+    if (formData.services.co) selectedServices.push('Carbon Monoxide Detection');
+    if (formData.services.comprehensive) selectedServices.push('Comprehensive Package');
+  }
+  
+  console.log('Transformed data for Supabase:', {
+    services: selectedServices,
+    firstName: formData.contact?.firstName,
+    lastName: formData.contact?.lastName,
+    // Log other fields to help debug
+  });
+  
+  // Insert into Supabase using the stored procedure
+  let supabaseResult = null;
+  try {
+    const { data, error } = await supabase.rpc('save_service_request', {
+      p_first_name: formData.contact?.firstName || '',
+      p_last_name: formData.contact?.lastName || '',
+      p_email: formData.contact?.email || '',
+      p_phone: formData.contact?.phone || '',
+      p_street_address: formData.property?.address || '',
+      p_city: formData.property?.city || '',
+      p_zip_code: formData.property?.zipCode || '',
+      p_property_type: formData.property?.type || '',
+      p_property_size: formData.property?.size || '',
+      p_preferred_date: formData.appointment?.date || new Date().toISOString().split('T')[0],
+      p_preferred_time: formData.appointment?.time || '',
+      p_special_notes: formData.property?.specialNotes || '',
+      p_how_heard: formData.contact?.howHeard || '',
+      p_services: selectedServices,
+      p_base_inspection_fee: formData.pricing?.baseInspectionFee || 0,
+      p_service_type_fee: formData.pricing?.serviceTypeFee || 0,
+      p_property_size_fee: formData.pricing?.propertySizeFee || 0,
+      p_weekend_fee: formData.pricing?.weekendFee || 0,
+      p_total_price: formData.pricing?.totalPrice || 0,
     });
-}
-
-// Function to save data to Supabase
-async function saveToSupabase(formData) {
-    try {
-        // Create arrays of services
-        const servicesList = [];
-        if (formData.services.comprehensive) {
-            servicesList.push('Comprehensive Package');
-        } else {
-            if (formData.services.water) servicesList.push('Water Leak Detection');
-            if (formData.services.gas) servicesList.push('Gas Leak Detection');
-            if (formData.services.co) servicesList.push('Carbon Monoxide Detection');
-        }
-
-        // Call the stored procedure to save all data in a transaction
-        const { data, error } = await supabase.rpc('save_service_request', {
-            p_first_name: formData.contact.firstName,
-            p_last_name: formData.contact.lastName,
-            p_email: formData.contact.email,
-            p_phone: formData.contact.phone,
-            p_street_address: formData.property.address,
-            p_city: formData.property.city,
-            p_zip_code: formData.property.zipCode,
-            p_property_type: formData.property.type,
-            p_property_size: formData.property.size,
-            p_preferred_date: formData.appointment.date,
-            p_preferred_time: formData.appointment.time,
-            p_special_notes: formData.property.specialNotes || '',
-            p_how_heard: formData.contact.howHeard || '',
-            p_services: servicesList,
-            p_base_inspection_fee: formData.pricing.baseInspectionFee,
-            p_service_type_fee: formData.pricing.serviceTypeFee,
-            p_property_size_fee: formData.pricing.propertySizeFee,
-            p_weekend_fee: formData.pricing.weekendFee,
-            p_total_price: formData.pricing.totalPrice
-        });
-
-        if (error) throw error;
-
-        // Log the email
-        await supabase
-            .from('email_logs')
-            .insert([{
-                service_request_id: data,
-                recipient: formData.recipientEmail,
-                subject: 'New Leak Detection Service Request',
-                message: JSON.stringify(formData, null, 2),
-                status: 'sent'
-            }]);
-
-        return data;
-    } catch (error) {
-        console.error('Error saving to Supabase:', error);
-
-        // Log the failed email
-        try {
-            await supabase
-                .from('email_logs')
-                .insert([{
-                    recipient: formData.recipientEmail,
-                    subject: 'New Leak Detection Service Request',
-                    message: JSON.stringify(formData, null, 2),
-                    status: 'failed',
-                    error_message: error.message
-                }]);
-        } catch (logError) {
-            console.error('Error logging failed email:', logError);
-        }
-
-        throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ success: false, message: 'Database error', error });
     }
-}
+    supabaseResult = data;
+  } catch (err) {
+    console.error('Supabase exception:', err);
+    return res.status(500).json({ success: false, message: 'Database exception', error: err });
+  }
 
-// Function to format email content
-function formatEmailContent(formData) {
-    // Get service types
-    const services = [];
-    if (formData.services.comprehensive) {
-        services.push('Comprehensive Package (All Services)');
-    } else {
-        if (formData.services.water) services.push('Water Leak Detection');
-        if (formData.services.gas) services.push('Gas Leak Detection');
-        if (formData.services.co) services.push('Carbon Monoxide Detection');
+  // Send email notification
+  let emailResult = null;
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_RECIPIENT,
+      subject: 'New Leak Detection Schedule Form Submission',
+      text: `A new schedule form was submitted:\n\n${JSON.stringify(formData, null, 2)}`,
+    };
+    emailResult = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', emailResult.response);
+  } catch (err) {
+    console.error('Email send error:', err);
+    // Don't fail the whole request if email fails
+  }
+
+  res.json({
+    success: true,
+    message: 'Form submitted successfully',
+    supabase_id: supabaseResult,
+    email_sent: !!emailResult,
+  });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Local development server running at http://localhost:${PORT}`);
+  console.log(`Form submissions will be saved to the 'data' directory`);
+});
+
+// Test endpoint to check Supabase connection
+app.get('/api/test-supabase', async (req, res) => {
+  console.log('Testing Supabase connection...');
+  try {
+    const { data, error } = await supabase.from('customers').select('*').limit(5);
+    if (error) {
+      console.error('Supabase test error:', error);
+      return res.status(500).json({ success: false, error });
     }
-
-    // Format the email content
-    return `
-    <h1>New Leak Detection Service Request</h1>
-    
-    <h2>Customer Information</h2>
-    <p><strong>Name:</strong> ${formData.contact.firstName} ${formData.contact.lastName}</p>
-    <p><strong>Email:</strong> ${formData.contact.email}</p>
-    <p><strong>Phone:</strong> ${formData.contact.phone}</p>
-    <p><strong>How they heard about us:</strong> ${formData.contact.howHeard || 'Not specified'}</p>
-    
-    <h2>Property Information</h2>
-    <p><strong>Address:</strong> ${formData.property.address}, ${formData.property.city}, ${formData.property.zipCode}</p>
-    <p><strong>Property Type:</strong> ${formData.property.type}</p>
-    <p><strong>Property Size:</strong> ${formData.property.size}</p>
-    
-    <h2>Appointment Details</h2>
-    <p><strong>Date:</strong> ${formData.appointment.date}</p>
-    <p><strong>Time:</strong> ${formData.appointment.time}</p>
-    <p><strong>Services Requested:</strong> ${services.join(', ')}</p>
-    <p><strong>Special Notes:</strong> ${formData.property.specialNotes || 'None'}</p>
-    
-    <h2>Price Estimate</h2>
-    <p><strong>Base Inspection Fee:</strong> $${formData.pricing.baseInspectionFee.toFixed(2)}</p>
-    <p><strong>Service Fee:</strong> $${formData.pricing.serviceTypeFee.toFixed(2)}</p>
-    <p><strong>Property Size Fee:</strong> $${formData.pricing.propertySizeFee.toFixed(2)}</p>
-    <p><strong>Weekend Fee:</strong> $${formData.pricing.weekendFee.toFixed(2)}</p>
-    <p><strong>Total Estimate:</strong> $${formData.pricing.totalPrice.toFixed(2)}</p>
-  `;
-}
+    console.log('Supabase connection successful!');
+    console.log('Retrieved data:', data);
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error('Exception during Supabase test:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});

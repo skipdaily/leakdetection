@@ -90,3 +90,55 @@ The admin dashboard allows you to manage service requests and customers:
 ## License
 
 © 2025 Leak Detection. All rights reserved.
+
+## Form Submission Troubleshooting
+
+If you're experiencing issues with form submissions, here are some common solutions:
+
+### Supabase Connection Issues
+
+1. **Check Supabase Configuration**
+   - Ensure the Supabase URL and anon key are correct in `js/schedule-form.js`
+   - The current configuration points to: `dglezauqgxybwiyfriz.supabase.co`
+
+2. **CORS Issues**
+   - If you see "Failed to fetch" errors, it may be a CORS issue
+   - Make sure your Supabase project has the correct allowed origins:
+     - Go to Supabase Dashboard → Project Settings → API → CORS Origins
+     - Add your domain (e.g., `http://localhost:3000`, `https://yoursite.com`)
+
+3. **Database Permissions**
+   - Check Row Level Security (RLS) policies in Supabase
+   - Ensure anon users have INSERT permissions on the required tables
+
+### Local Development
+
+For local development, you can use the included API endpoint:
+
+1. Install dependencies:
+   ```
+   npm install express cors
+   ```
+
+2. Start the local API server:
+   ```
+   node api/submit-form.js
+   ```
+
+3. Access the site at `http://localhost:3000`
+
+Form submissions will be saved to the `data` directory when using the local API.
+
+### Database Structure
+
+The form is designed to work with the following Supabase database structure:
+
+- `customers` - Customer information
+- `addresses` - Property addresses
+- `service_requests` - Main form submissions
+- `service_request_services` - Service types for each request
+- `service_types` - Available service types
+- `property_types` - Available property types
+- `property_sizes` - Available property sizes
+
+See `docs/database_schema.sql` for the complete database schema.

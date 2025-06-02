@@ -1,0 +1,35 @@
+{
+  "services": {
+    "water": false,
+    "gas": true,
+    "co": false,
+    "comprehensive": false
+  },
+  "property": {
+    "type": "apartment",
+    "size": "2bed",
+    "address": "5665 aguilar rd",
+    "city": "rocklin",
+    "zipCode": "95677",
+    "specialNotes": ""
+  },
+  "appointment": {
+    "date": "2025-06-19",
+    "time": "morning"
+  },
+  "contact": {
+    "firstName": "thomas",
+    "lastName": "gould",
+    "email": "tomgouldmaui@gmail.com",
+    "phone": "9169559025",
+    "howHeard": "search"
+  },
+  "pricing": {
+    "baseInspectionFee": 125,
+    "serviceTypeFee": 75,
+    "propertySizeFee": 25,
+    "weekendFee": 0,
+    "totalPrice": 225
+  },
+  "recipientEmail": "tomgouldmaui@gmail.com"
+}
