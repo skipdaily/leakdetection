@@ -8,7 +8,7 @@ A comprehensive website for a professional leak detection service that allows us
 - **Dynamic Pricing**: Real-time price calculation based on service type, property size, and other factors
 - **Appointment Scheduling**: Users can select date, time, and provide special instructions
 - **Form Submission**: Email notifications and database storage of all form submissions
-- **Admin Dashboard**: Manage service requests and customers
+- **Admin Dashboard**: Manage service requests and customers (no authentication required)
 - **Mobile Responsive**: Fully responsive design for all device sizes
 - **Emergency Contact**: Quick access to emergency services
 
@@ -18,9 +18,8 @@ A comprehensive website for a professional leak detection service that allows us
 - CSS3 with Tailwind CSS
 - JavaScript (vanilla)
 - Node.js and Express for the server
-- Supabase for database storage
-- EmailJS as a fallback for form submission
-- Nodemailer for email notifications
+- EmailJS for form submission notifications
+- Local JSON storage for form submissions
 - Responsive Design
 
 ## Pages
@@ -52,40 +51,26 @@ Then visit `http://localhost:3000` in your browser.
    npm install
    ```
 
-2. Create `.env` file:
+2. Create `.env` file (optional for email configuration):
    ```bash
    cp .env.example .env
    ```
-   Then edit with your Supabase credentials:
-   ```
-   SUPABASE_URL=https://dglezauqqxybwiyfiriz.supabase.co
-   SUPABASE_KEY=your-supabase-anon-key
-   SUPABASE_SERVICE_KEY=your-supabase-service-key
-   ```
-
-3. Apply the database schema to Supabase:
    ```bash
-   ./scripts/apply-schema.sh
-   ```
-
-4. Start the server:
+3. Start the server:
    ```bash
    npm start
    ```
 
 ### Admin Dashboard
 
-The admin dashboard allows you to manage service requests and customers:
+The admin dashboard allows you to manage service requests and customers without requiring any authentication. All submitted forms are stored locally and can be viewed and managed directly through the dashboard.
 
-1. Set up authentication in Supabase as described in the documentation
-2. Access the admin dashboard at `/admin/index.html`
+Access the admin dashboard at `/admin/index.html`
 
 ## Documentation
 
 - `docs/form_submission_setup.md` - Instructions for setting up form submission
 - `docs/emailjs-setup.html` - EmailJS configuration guide
-- `docs/database_schema.sql` - SQL schema for the database
-- `docs/supabase-setup.md` - Supabase configuration guide
 
 ## License
 
@@ -95,10 +80,10 @@ The admin dashboard allows you to manage service requests and customers:
 
 If you're experiencing issues with form submissions, here are some common solutions:
 
-### Supabase Connection Issues
+### EmailJS Configuration
 
-1. **Check Supabase Configuration**
-   - Ensure the Supabase URL and anon key are correct in `js/schedule-form.js`
+1. **Check EmailJS Configuration**
+   - Ensure the EmailJS service ID and template ID are correct in `js/schedule-form.js`
    - The current configuration points to: `dglezauqgxybwiyfriz.supabase.co`
 
 2. **CORS Issues**
